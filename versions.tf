@@ -1,5 +1,5 @@
 terraform {
-  # The management-cluster-k8s module requires >= 1.11.0 for write-only attributes
+  # The management-cluster-k8s child module requires >= 1.11.0 for write-only attributes
   required_version = ">= 1.11.0"
 
   required_providers {

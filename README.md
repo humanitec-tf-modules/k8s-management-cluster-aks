@@ -18,7 +18,9 @@ The identity setup for the Operator is an outcome of the secret store configurat
 
 ## Entra ID access group
 
-The Orchestrator obtains access to the AKS cluster via a [Cloud Account](https://developer.humanitec.com/platform-orchestrator/docs/platform-orchestrator/security/cloud-accounts/azure/). For Azure, the identity in that Cloud Account is added as a member into an Entra ID security group which gets the required role assignemnt. This module creates that security group by default, or you can [bring your own](#bring-your-own-entra-id-security-group).
+This module requires the use of [Microsoft Entra ID authentication for the AKS control plane](https://learn.microsoft.com/en-us/azure/aks/entra-id-control-plane-authentication). An Entra ID security group receives the required role assignment, and the principal used in an [Azure Cloud Account](https://developer.humanitec.com/platform-orchestrator/docs/platform-orchestrator/security/cloud-accounts/azure/) is added as a member to that group
+
+This module creates that Entra security group by default, or you can [bring your own](#bring-your-own-entra-id-security-group).
 
 ## Humanitec Agent
 
