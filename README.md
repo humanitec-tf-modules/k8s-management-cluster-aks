@@ -1,6 +1,6 @@
 # Humanitec management cluster on AKS
 
-This repository contains an OpenTofu/Terraform module for setting up a Humanitec management cluster on Azure AKS.
+This repository contains an OpenTofu/Terraform module for configuring an existing Azure AKS cluster as a Humanitec management cluster.
 
 It wraps the [generic base module](https://github.com/humanitec-tf-modules/k8s-management-cluster) and adds the Azure specific elements around cluster access and Operator identity.
 
