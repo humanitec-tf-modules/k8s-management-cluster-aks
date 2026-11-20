@@ -225,7 +225,7 @@ module "my_management_cluster_aks" {
 ## Requirements
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.11.0 |
 | <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 3.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 4.0.0, < 6.0.0 |
@@ -233,23 +233,16 @@ module "my_management_cluster_aks" {
 | <a name="requirement_humanitec"></a> [humanitec](#requirement\_humanitec) | ~> 1.9 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 3 |
 
-## Providers
-
-| Name | Version |
-| ---- | ------- |
-| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | ~> 3.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 4.0.0, < 6.0.0 |
-
 ## Modules
 
 | Name | Source | Version |
-| ---- | ------ | ------- |
-| <a name="module_management_cluster"></a> [management\_cluster](#module\_management\_cluster) | /home/tobi/repos/humanitec-tf-modules/management-cluster-k8s | n/a |
+|------|--------|---------|
+| <a name="module_management_cluster"></a> [management\_cluster](#module\_management\_cluster) | github.com/humanitec-tf-modules/k8s-management-cluster | add-operator-k8s |
 
 ## Resources
 
 | Name | Type |
-| ---- | ---- |
+|------|------|
 | [azuread_group.orchestrator_deploy_access](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group) | resource |
 | [azuread_group_member.orchestrator_deploy_access](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group_member) | resource |
 | [azurerm_role_assignment.orchestrator_deploy_access_cluster_user](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
@@ -259,11 +252,11 @@ module "my_management_cluster_aks" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| ---- | ----------- | ---- | ------- | :------: |
+|------|-------------|------|---------|:--------:|
 | <a name="input_aks_name"></a> [aks\_name](#input\_aks\_name) | Name of the existing AKS cluster to use as the Humanitec management cluster. | `string` | n/a | yes |
 | <a name="input_aks_resource_group"></a> [aks\_resource\_group](#input\_aks\_resource\_group) | Name of the resource group containing the AKS cluster. | `string` | n/a | yes |
 | <a name="input_cloud_account_id"></a> [cloud\_account\_id](#input\_cloud\_account\_id) | ID of the Azure Cloud Account the Orchestrator uses to access the cluster. | `string` | n/a | yes |
-| <a name="input_cloud_account_principal_object_id"></a> [cloud\_account\_principal\_object\_id](#input\_cloud\_account\_principal\_object\_id) | Object ID of the Entra ID principal (the service principal or managed identity behind the Humanitec Orchestrator cloud account) that gets deploy access to the cluster. | `string` | n/a | yes |
+| <a name="input_cloud_account_principal_object_id"></a> [cloud\_account\_principal\_object\_id](#input\_cloud\_account\_principal\_object\_id) | Object ID of the Entra ID principal (the service principal or managed identity behind the Humanitec Orchestrator cloud account) that gets deploy access to the cluster. The module adds it to the Entra ID security group for accessing the cluster, see the deploy\_access\_group\_object\_id variable. | `string` | n/a | yes |
 | <a name="input_cluster_role_name"></a> [cluster\_role\_name](#input\_cluster\_role\_name) | Name of the Kubernetes ClusterRole and ClusterRoleBinding granting the Orchestrator access to the cluster. | `string` | `"humanitec-deploy-access"` | no |
 | <a name="input_cluster_secrets"></a> [cluster\_secrets](#input\_cluster\_secrets) | Driver input secrets of the Resource Definition for the Driver `humanitec/k8s-cluster-aks`. See the Driver documentation at https://developer.humanitec.com/platform-orchestrator/docs/integration-and-extensions/drivers/k8-drivers/. If `enable_agent` is `true`, the module adds the key `agent_url`. | `any` | `{}` | no |
 | <a name="input_deploy_access_group_display_name"></a> [deploy\_access\_group\_display\_name](#input\_deploy\_access\_group\_display\_name) | Display name of the Entra ID group the module creates. If null, a name is derived from the cluster name, resource group, and subscription. Ignored if deploy\_access\_group\_object\_id is set. | `string` | `null` | no |
@@ -315,7 +308,7 @@ module "my_management_cluster_aks" {
 | <a name="input_helm_release_wait"></a> [helm\_release\_wait](#input\_helm\_release\_wait) | Will wait until all resources are in a ready state before marking the release as successful. Defaults to `true`. | `bool` | `null` | no |
 | <a name="input_helm_release_wait_for_jobs"></a> [helm\_release\_wait\_for\_jobs](#input\_helm\_release\_wait\_for\_jobs) | If wait is enabled, will wait until all Jobs have been completed before marking the release as successful. Defaults to `false`. | `bool` | `null` | no |
 | <a name="input_humanitec_org_id"></a> [humanitec\_org\_id](#input\_humanitec\_org\_id) | Humanitec Organization ID. Required if `enable_driver_authentication` is `true`, ignored otherwise. | `string` | `null` | no |
-| <a name="input_loadbalancer"></a> [loadbalancer](#input\_loadbalancer) | The IP or DNS name representing the Load Balancer. | `string` | `null` | no |
+| <a name="input_loadbalancer"></a> [loadbalancer](#input\_loadbalancer) | The IP or DNS name representing the cluster load balancer. | `string` | `null` | no |
 | <a name="input_operator_private_key"></a> [operator\_private\_key](#input\_operator\_private\_key) | Private key for the Humanitec Operator authentication against Humanitec-hosted Drivers. Must be a multiline string starting with -----BEGIN PRIVATE KEY----- and having a final line break. Both or neither of `operator_public_key` and `operator_private_key` must be set, and only if `enable_driver_authentication` is `true`. If not set while `enable_driver_authentication` is `true`, a convenience key pair will be generated using a `tls_private_key` resource and stored in the Terraform state, but this is not recommended for production use. | `string` | `null` | no |
 | <a name="input_operator_public_key"></a> [operator\_public\_key](#input\_operator\_public\_key) | Public key for the Humanitec Operator authentication against Humanitec-hosted Drivers. Must be a multiline string starting with -----BEGIN PUBLIC KEY----- and having a final line break. Both or neither of `operator_public_key` and `operator_private_key` must be set, and only if `enable_driver_authentication` is `true`. If not set while `enable_driver_authentication` is `true`, a convenience key pair will be generated using a `tls_private_key` resource and stored in the Terraform state, but this is not recommended for production use. | `string` | `null` | no |
 | <a name="input_resource_definition_criteria"></a> [resource\_definition\_criteria](#input\_resource\_definition\_criteria) | Matching Criteria for the Resource Definition, directing Deployments to the cluster. Each entry creates one Matching Criteria. Unset attributes match any value. See https://developer.humanitec.com/platform-orchestrator/docs/platform-orchestrator/resources/resource-definitions/#matching-criteria | <pre>list(object({<br/>    app_id   = optional(string)<br/>    env_id   = optional(string)<br/>    env_type = optional(string)<br/>    res_id   = optional(string)<br/>    class    = optional(string)<br/>  }))</pre> | `[]` | no |
@@ -328,7 +321,7 @@ module "my_management_cluster_aks" {
 ## Outputs
 
 | Name | Description |
-| ---- | ----------- |
+|------|-------------|
 | <a name="output_aks_cluster_id"></a> [aks\_cluster\_id](#output\_aks\_cluster\_id) | ID of the AKS cluster. |
 | <a name="output_cluster_access_subject"></a> [cluster\_access\_subject](#output\_cluster\_access\_subject) | Subject of the Kubernetes ClusterRoleBinding, i.e. the identity the Orchestrator uses to access the cluster, as an object with the attributes `kind` and `name` |
 | <a name="output_cluster_role_binding_name"></a> [cluster\_role\_binding\_name](#output\_cluster\_role\_binding\_name) | Name of the Kubernetes ClusterRoleBinding granting the Orchestrator access to the cluster |
