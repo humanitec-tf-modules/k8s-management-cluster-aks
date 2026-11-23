@@ -62,7 +62,27 @@ module "my_management_cluster_aks" {
 }
 ```
 
-The following examples configure the Operator installation. They omit the cluster inputs shown in the Generic cluster example.
+When you manage the Cloud Account using the [Azure Cloud Account module](https://github.com/humanitec-tf-modules/orchestrator-cloud-account-azure-identity), pass in its outputs:
+
+```hcl
+module "my_management_cluster_aks" {
+  source = "github.com/humanitec-tf-modules/k8s-management-cluster-aks?ref=vX.Y.Z"
+  providers = {
+    humanitec  = humanitec
+    helm       = helm
+    kubernetes = kubernetes
+    azuread    = azuread
+    azurerm    = azurerm
+  }
+
+  # All other values like in the preceding example, omitted
+
+  cloud_account_id                  = module.cloud_account_azure_identity.cloud_account_id
+  cloud_account_principal_object_id = module.cloud_account_azure_identity.managed_identity_object_id
+}
+```
+
+The following examples configure the Operator installation. They omit the cluster inputs shown in the first example.
 
 ### Bring your own Entra ID security group
 
@@ -77,7 +97,7 @@ module "my_management_cluster_aks" {
     azurerm    = azurerm
   }
 
-  # All values like in the preceding example, omitted
+  # All values like in the first example, omitted
 
   # Object ID of your existing security group. The Cloud Account principal will be added to it
   deploy_access_group_object_id = "33333333-3333-3333-3333-333333333333"
